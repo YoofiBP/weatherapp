@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="icon" href="/img/favicon.ico" />
+</head>
+
+<body>
+    <div class="main-content">
+        {{>header}}
+        <p>{{paragraph}}</p>
+
+        <form>
+            <input placeholder="Location" />
+            <button>Search</button>
+        </form>
+        <p id="name"></p>
+        <p id="region"></p>
+        <p id="country"></p>
+        <p id="weather"></p>
+    </div>
+    {{>footer}}
+    <script src="/js/index.js"></script>
+</body>
+
+</html>
