@@ -20,6 +20,7 @@ hbs.registerPartials(partialsPath);
 app.get("", (req, res) => {
   res.render("index", {
     title: "Weather App by Yoofi",
+    heading: "Weather",
     name: "Yoofi",
   });
 });
