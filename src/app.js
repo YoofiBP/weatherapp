@@ -38,7 +38,6 @@ app.get("/weather", (req, res) => {
         }
         const [weather] = current.weather_descriptions;
         const { name, region, country } = location;
-        console.log(weather)
         res.send({ name, region, country, weather });
       }
     );

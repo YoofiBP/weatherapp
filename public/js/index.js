@@ -5,6 +5,7 @@ const currentLocationButton = document.querySelector("#currentLocation");
 //event listener callbacksw
 const currentLocationCallback = (event) => {
   event.preventDefault();
+  search.value = "";
   showLoadingText();
   navigator.geolocation.getCurrentPosition(async (pos) => {
     const {latitude, longitude} = pos.coords;
