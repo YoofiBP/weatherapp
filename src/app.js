@@ -25,6 +25,24 @@ app.get("", (req, res) => {
 });
 
 app.get("/weather", (req, res) => {
+  if(req.query.latitude && req.query.longitude){
+    const {latitude, longitude} = req.query;
+    forecast(
+      longitude,
+      latitude,
+      (err, forecastResponse, { current = {}, location = {} } = {}) => {
+        if (err) {
+          return res.send({ err });
+        } else if (location.name === null) {
+          return res.send({ error: "Invalid address" });
+        }
+        const [weather] = current.weather_descriptions;
+        const { name, region, country } = location;
+        console.log(weather)
+        res.send({ name, region, country, weather });
+      }
+    );
+  } else{
   if (!req.query.address) {
     return res.send({ error: "Please provide a search term" });
   }
@@ -50,7 +68,10 @@ app.get("/weather", (req, res) => {
       }
     );
   });
+}
 });
+
+
 
 app.get("/products", (req, res) => {
   res.json(req.query);
