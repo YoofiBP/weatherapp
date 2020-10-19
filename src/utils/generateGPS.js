@@ -1,7 +1,7 @@
-const request = require("request");
 require("dotenv").config();
+const axios = require("axios");
 
-const generateGPS = (address, callback) => {
+const generateGPS = async (address) => {
   if (!address) {
     console.log("Please provide an address");
     return;
@@ -12,14 +12,15 @@ const generateGPS = (address, callback) => {
 
   options = {
     url,
-    json: true,
-    qs: {
+    method: "get",
+    params: {
       limit: 1,
       access_token: process.env.MAPBOX_TOKEN,
     },
   };
 
-  request(options, callback);
+  const response = await axios(options);
+  return response.data;
 };
 
 module.exports = generateGPS;

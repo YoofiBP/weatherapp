@@ -25,53 +25,29 @@ app.get("", (req, res) => {
   });
 });
 
-app.get("/weather", (req, res) => {
-  if(req.query.latitude && req.query.longitude){
-    const {latitude, longitude} = req.query;
-    forecast(
-      longitude,
-      latitude,
-      (err, forecastResponse, { current = {}, location = {} } = {}) => {
-        if (err) {
-          return res.send({ err });
-        } else if (location.name === null) {
-          return res.send({ error: "Invalid address" });
-        }
-        const [weather] = current.weather_descriptions;
-        const { name, region, country } = location;
-        res.send({ name, region, country, weather });
+app.get("/weather", async (req, res) => {
+  let longitude, latitude;
+
+  try {
+    if (req.query.latitude && req.query.longitude) {
+      latitude = req.query.latitude;
+      longitude = req.query.longitude;
+    } else {
+      if (!req.query.address) {
+        return res.send({ error: "Please provide a search term" });
       }
-    );
-  } else{
-  if (!req.query.address) {
-    return res.send({ error: "Please provide a search term" });
-  }
-  generateGPS(req.query.address, (err, gpsResponse, { features = [] } = {}) => {
-    if (err) {
-      return res.send({ err });
-    } else if (features.length === 0) {
-      return res.send({ error: "Sorry, we found no matching records" });
+      const { features } = await generateGPS(req.query.address);
+      [longitude, latitude] = features[0].center;
     }
-    const [longitude, latitude] = features[0].center;
-    forecast(
-      longitude,
-      latitude,
-      (err, forecastResponse, { current = {}, location = {} } = {}) => {
-        if (err) {
-          return res.send({ err });
-        } else if (location.name === null) {
-          return res.send({ error: "Invalid address" });
-        }
-        const [weather] = current.weather_descriptions;
-        const { name, region, country } = location;
-        res.send({ name, region, country, weather });
-      }
-    );
-  });
-}
+
+    const { current, location } = await forecast(longitude, latitude);
+    const [weather] = current.weather_descriptions;
+    const { name, region, country } = location;
+    res.send({ name, region, country, weather });
+  } catch (err) {
+    console.log(err);
+  }
 });
-
-
 
 app.get("/products", (req, res) => {
   res.json(req.query);

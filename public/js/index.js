@@ -9,6 +9,7 @@ const currentLocationCallback = (event) => {
   showLoadingText();
   navigator.geolocation.getCurrentPosition(async (pos) => {
     const {latitude, longitude} = pos.coords;
+    console.log(pos.coords)
     const response = await fetch(`/weather?latitude=${latitude}&longitude=${longitude}`);
     const data = await response.json();
     setTextFields(data);
